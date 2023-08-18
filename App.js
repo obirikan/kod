@@ -104,7 +104,10 @@ export default function App() {
       <Text>{timeleft}</Text>
       {Object.keys(update).map((key) => {
       const playerName = key.slice(1); // Remove the leading "-"
-      return <Text key={key}>{}: {update[key].player7}</Text>;
+      return (<>
+      <Text key={key}>{}: {update[key].player1}</Text>
+      <Text key={key}>{}: {update[key].player7}</Text>
+      </>);
     })}
       <TextInput
         keyboardType="numeric"
