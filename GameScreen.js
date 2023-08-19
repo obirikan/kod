@@ -16,6 +16,7 @@ export default function App() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [updates,setupdate]=useState([])
   const {gid}=useContext(State)
+  const [functionCalled, setFunctionCalled] = useState(false);
   
 
   // const playersRef = collection(db, 'players');
@@ -53,15 +54,26 @@ export default function App() {
     //   };
     // }, [timeleft, isSubmitted]);
 
+    const call=()=>{
+        alert('all')
+    }
+
     useEffect(() => {
         startTimer();
       
-        if (gid) {
+        if (gid && !functionCalled) {
           const gameRef = ref(dbs, `games/${gid}`);
           const unsubscribe = onValue(gameRef, (snapshot) => {
             const data = snapshot.val();
-            setupdate(data); // Update the entire data object for the hosted game
-            console.log(data);
+            setupdate(data.data); // Update the entire data object for the hosted game
+            console.log(data.data);
+            // console.log((data))
+            const dataLength = data.data ? Object.keys(data.data).length : 0;
+            console.log(dataLength);
+            if(dataLength==4 && !functionCalled){
+                call();
+                setFunctionCalled(true);
+            }
           });
       
           return () => {
@@ -106,14 +118,14 @@ export default function App() {
     console.log(`${closestPlayer.name} is the winner with an absolute difference of ${closestPlayer.number} and an average number of ${multipliedAverage}`);
     };
 
-   const playerName='jkj6'
+   const playerName='jk8'
     const submitNumber = async () => {
         const newNumber=87
         if (gid) {
           if (playerName === playerName) {
             // If the player is the host, update their number directly in the database
             const data=[{
-                    name:'kelv',
+                    name:'john',
                     number:27
                 }]
     
@@ -131,18 +143,22 @@ export default function App() {
       };
       
 
-//  console.log(update[0].hostName);
+ console.log(updates);
   return (
     <View style={styles.container}>
       <Text>{timeleft}</Text>
       <Text>{gid}</Text>
       {/* <Text>host name{update[0].hostName}</Text> */}
-      {/* {Object.keys(update).map((key) => {
-      const playerName = key.slice(1);
-      return (<>
-      <Text key={key}>{update[key][0].name}:{update[key][0].player}</Text>
-      </>);
-    })} */}
+      {updates ? (
+  Object.keys(updates).map((dataKey) => {
+    const data = updates[dataKey];
+    return data.map((entry, index) => (
+      <Text key={index}>{entry.name}: {entry.number}</Text>
+    ));
+  })
+) : (
+  <Text>No data available</Text>
+)}
       <TextInput
         keyboardType="numeric"
         placeholder="Player 1 Number"
