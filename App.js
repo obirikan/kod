@@ -1,18 +1,10 @@
-import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer } from '@react-navigation/native';
-const Stack = createStackNavigator();
-import Home from './Home';
-import GameScreen from './GameScreen'
+import Stack from './MyStack';
+import Context from './Context';
 
-function MyStack() {
+export default function App() {
   return (
-    <NavigationContainer independent={true}>  
-    <Stack.Navigator>
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="GameScreen" component={GameScreen} />
-    </Stack.Navigator>
-    </NavigationContainer>  
+      <Context>
+        <Stack />
+      </Context>
   );
 }
-
-export default MyStack
