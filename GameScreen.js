@@ -16,6 +16,7 @@ export default function App() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [updates,setupdate]=useState([])
   const {gid}=useContext(State)
+  const [functionCalled, setFunctionCalled] = useState(false);
   
 
   // const playersRef = collection(db, 'players');
@@ -53,16 +54,26 @@ export default function App() {
     //   };
     // }, [timeleft, isSubmitted]);
 
+    const call=()=>{
+        alert('all')
+    }
+
     useEffect(() => {
         startTimer();
       
-        if (gid) {
+        if (gid && !functionCalled) {
           const gameRef = ref(dbs, `games/${gid}`);
           const unsubscribe = onValue(gameRef, (snapshot) => {
             const data = snapshot.val();
             setupdate(data.data); // Update the entire data object for the hosted game
             console.log(data.data);
             // console.log((data))
+            const dataLength = data.data ? Object.keys(data.data).length : 0;
+            console.log(dataLength);
+            if(dataLength==4 && !functionCalled){
+                call();
+                setFunctionCalled(true);
+            }
           });
       
           return () => {
