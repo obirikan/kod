@@ -1,10 +1,15 @@
 import { StyleSheet, Text, View ,TouchableOpacity} from 'react-native'
 import React from 'react'
-import { useState } from 'react';
+import { useState,useContext } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { getDatabase, ref, push, set, get } from '@firebase/database';
 import { serverTimestamp } from '@firebase/database';
+import { State } from './Context';
 
 const Home = () => {
+  const navigation=useNavigation()
+  const {setgid}=useContext(State)
+
 
     const createGame = async (hostName) => {
         const gamesRef = ref(getDatabase(), 'games');
@@ -12,12 +17,15 @@ const Home = () => {
       
         const newGameData =[{
             hostName:'kay',
-            data:[{}]
         }]
+        setgid(newGameRef.key)
       
         await set(newGameRef, newGameData);
-        console.log(newGameRef.key) // Return the unique game ID
+        navigation.navigate('GameScreen') 
       };
+
+
+
 
       const joinGame = async () => {
         const gameId='-NcDlq0D4-XnF-znnia3'

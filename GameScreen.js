@@ -1,26 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View,TextInput ,Button} from 'react-native';
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useContext } from 'react';
 import firebase from 'firebase/app';
-import { getDatabase, ref, push, onValue, serverTimestamp ,set} from '@firebase/database';
+import { getDatabase, ref, push, onValue, serverTimestamp ,set,update} from '@firebase/database';
 import 'firebase/database';
 import { dbs } from './firebase';
-import {
-  addDoc,
-  arrayUnion,
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  onSnapshot,
-  query,
-  updateDoc,
-  where,
-  equalTo, get 
-} from "@firebase/firestore";
-
-
+import { State } from './Context';
 
 export default function App() {
   const [player1,setplayer1]=useState(0)
@@ -29,7 +14,9 @@ export default function App() {
   const [player4,setplayer4]=useState(10)
   const [timeleft,settime]=useState(60)
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [update,setupdate]=useState([])
+  const [updates,setupdate]=useState([])
+  const {gid}=useContext(State)
+  
 
   // const playersRef = collection(db, 'players');
 
@@ -51,20 +38,40 @@ export default function App() {
         // handleNumberSubmit()
       }
     };
+    // useEffect(() => {
+    //   startTimer();
+  
+    //   const playersRef = ref(dbs, 'games');
+    //   const unsubscribe = onValue(playersRef, (snapshot) => {
+    //     const data = snapshot.val();
+    //     setupdate(data); // Update the entire data object
+    //     console.log(data);
+    //   });
+  
+    //   return () => {
+    //     unsubscribe();
+    //   };
+    // }, [timeleft, isSubmitted]);
+
     useEffect(() => {
-      startTimer();
-  
-      const playersRef = ref(dbs, 'players');
-      const unsubscribe = onValue(playersRef, (snapshot) => {
-        const data = snapshot.val();
-        setupdate(data); // Update the entire data object
-        console.log(data);
-      });
-  
-      return () => {
-        unsubscribe();
-      };
-    }, [timeleft, isSubmitted]);
+        startTimer();
+      
+        if (gid) {
+          const gameRef = ref(dbs, `games/${gid}`);
+          const unsubscribe = onValue(gameRef, (snapshot) => {
+            const data = snapshot.val();
+            setupdate(data); // Update the entire data object for the hosted game
+            console.log(data);
+          });
+      
+          return () => {
+            unsubscribe();
+          };
+        }
+      }, [timeleft, isSubmitted, gid]);
+      
+      
+      
 
     const handleNumberSubmit = async() => {
       setIsSubmitted(true);
@@ -99,24 +106,49 @@ export default function App() {
     console.log(`${closestPlayer.name} is the winner with an absolute difference of ${closestPlayer.number} and an average number of ${multipliedAverage}`);
     };
 
+   const playerName='jkj6'
+    const submitNumber = async () => {
+        const newNumber=87
+        if (gid) {
+          if (playerName === playerName) {
+            // If the player is the host, update their number directly in the database
+            const data=[{
+                    name:'kelv',
+                    number:27
+                }]
+    
+            const hostGameRef = ref(dbs, `games/${gid}/data`);
+            await push(hostGameRef,data);
+          } else {
+            // If the player is not the host, push the new number to the data array
+            const hostGameRef = ref(dbs, `games/${gid}/data`);
+            await push(hostGameRef, {
+              name: playerName,
+              number: newNumber
+            });
+          }
+        }
+      };
+      
 
-
-//
+//  console.log(update[0].hostName);
   return (
     <View style={styles.container}>
       <Text>{timeleft}</Text>
-      {Object.keys(update).map((key) => {
+      <Text>{gid}</Text>
+      {/* <Text>host name{update[0].hostName}</Text> */}
+      {/* {Object.keys(update).map((key) => {
       const playerName = key.slice(1);
       return (<>
       <Text key={key}>{update[key][0].name}:{update[key][0].player}</Text>
       </>);
-    })}
+    })} */}
       <TextInput
         keyboardType="numeric"
         placeholder="Player 1 Number"
         onChangeText={value => setplayer1(parseInt(value))}
       />
-      <Button title="Submit Numbers" onPress={handleNumberSubmit} />
+      <Button title="Submit Numbers" onPress={submitNumber} />
       <StatusBar style="auto" />
     </View>
   );
