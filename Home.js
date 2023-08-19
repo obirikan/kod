@@ -28,7 +28,7 @@ const Home = () => {
 
 
       const joinGame = async () => {
-        const gameId='-NcDlq0D4-XnF-znnia3'
+        const gameId='-NcEGxSgA3AtBiM39It4'
         const gameToJoinRef = ref(getDatabase(), `games/${gameId}`);
       
         const gameSnapshot = await get(gameToJoinRef);
@@ -39,7 +39,8 @@ const Home = () => {
         }
 
         console.log({gameData});
-      
+        navigation.navigate('GameScreen') 
+        setgid(gameId)
         // const playerData = {
         //   name: playerName,
         //   score: 0
