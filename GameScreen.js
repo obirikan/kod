@@ -70,7 +70,6 @@ export default function App() {
 
     useEffect(() => {
         startTimer();
-      
         if (gid && !functionCalled) {
           const gameRef = ref(dbs, `games/${gid}`);
           const unsubscribe = onValue(gameRef, (snapshot) => {
