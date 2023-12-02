@@ -54,18 +54,27 @@ export default function App() {
     //   };
     // }, [timeleft, isSubmitted]);
 
-    const call=()=>{
-        alert('all')
-    }
+    const call = () => {
+        alert('all');
+      
+        const players = Object.keys(updates).map((dataKey) => {
+          const data = updates[dataKey];
+          return data.map((entry, index) => ({
+            name: `Player ${index + 1}`,
+            number: entry.number
+          }));
+        });
+      
+        console.log(players);
+      };
 
     useEffect(() => {
         startTimer();
-      
         if (gid && !functionCalled) {
           const gameRef = ref(dbs, `games/${gid}`);
           const unsubscribe = onValue(gameRef, (snapshot) => {
             const data = snapshot.val();
-            setupdate(data.data); // Update the entire data object for the hosted game
+            setupdate(data.data);
             console.log(data.data);
             // console.log((data))
             const dataLength = data.data ? Object.keys(data.data).length : 0;
@@ -118,15 +127,16 @@ export default function App() {
     console.log(`${closestPlayer.name} is the winner with an absolute difference of ${closestPlayer.number} and an average number of ${multipliedAverage}`);
     };
 
-   const playerName='jk8'
+   const playerName='jko'
+   
     const submitNumber = async () => {
         const newNumber=87
         if (gid) {
           if (playerName === playerName) {
             // If the player is the host, update their number directly in the database
             const data=[{
-                    name:'john',
-                    number:27
+                    name:'kuin',
+                    number:90
                 }]
     
             const hostGameRef = ref(dbs, `games/${gid}/data`);
