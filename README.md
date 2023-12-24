@@ -1,4 +1,4 @@
-# kod
+# kod [king of diamonds]
 Description:
 Welcome to the Multiplayer Number Guessing Game! This interactive game challenges players to use their strategic thinking and number sense to outsmart their opponents. Players compete to select numbers within a given range while aiming to be the closest to a calculated target value. The game features a dynamic timer, real-time player interaction, and an innovative scoring system that rewards precision.
 
